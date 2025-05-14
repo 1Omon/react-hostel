@@ -1,50 +1,33 @@
-import React from "react";
-import Header from "./components/Header";
-import HostelCard from "./components/HostelCard";
-import logo from "./assets/react.svg";
-import AboutHostel from "./components/AboutHostel";
-import SignUp from "./components/SignUp";
-import Interactive from "./components/Interactive";
-
-const aboutHostelContent = {
-  name: "Ultimate Hostel",
-  images: [
-    { src: "/beru.png", alt: "image" },
-    { src: "/epic.png", alt: "image" },
-    { src: "/epic2.png", alt: "image" },
-    { src: "/beru.png", alt: "image" },
-  ],
-  content:
-    "Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah d Blah dhjkach kjk hvjhkqcbhajbcjhak bcjhklscdl j asjkcbakjlcbajkcljkacbcaklcbk jacklacba lkkj jk bkcjbl kcjbkcjbjk cdbjk lbvkadvkb kjb jkb kjcklabjk clbck  jkbls djkbal kbjk bakjbkjabkjlbsd bjbjka mlkdaciuww cw lcb ajklcb jkabcjc kbkjllacb lsadkjbcj cb jklckj abc cjklbasklba lkkaa kjnkj vlsuicksl v vj lkjabjk djk bjksjkvbjvkj bjkavjkbjkb jkvjkblkbkj vb ajkbjk bvjklbsjkjbjk",
-};
-
-const otherHostels = [
-  {
-    name: "Canam Hostel",
-    image: "/epic.png",
-    location: "Ayeduase",
-  },
-  {
-    name: "Adom Bi Hostel",
-    image: "/beru.png",
-    location: "Kotei",
-  },
-  {
-    name: "Hall 7",
-    image: "/epic.png",
-    location: "Campus",
-  },
-  {
-    name: "Evandy",
-    image: "/epic.png",
-    location: "Ayeduase - Newsite",
-  },
-];
+import React, { useEffect, useState } from "react";
+import CartItem from "./components/cart-item";
 
 export default function App() {
+  const [fetchedData, setFetchedData] = useState([]);
+
+  useEffect(() => {
+    async function getData() {
+      try {
+        const response = await fetch("https://dummyjson.com/carts");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        setFetchedData(data.carts);
+      } catch (error) {
+        console.error("Fetch error:", error);
+      }
+    }
+    getData();
+  }, []);
+
   return (
     <>
-      <Interactive />
+      <div className="bg-gray-200 grid grid-cols-3 gap-6">
+        {fetchedData.map((data) => (
+          <CartItem {...data} key={data.id} />
+        ))}
+      </div>
     </>
   );
 }
